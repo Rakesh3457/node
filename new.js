@@ -3,24 +3,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const path =require('path');
+const rootDir = path.dirname(require.main.filename);
+console.log(rootDir)
 
 
 const app = express();
+
+const mainAdmin = require('./main');
+const mainSecond = require('./main2');
+
 app.use(bodyParser.urlencoded({extended:false}));
 
-app.use('/add-product',(req, res, next)=>{
-   console.log('its first middleware');
-  res.send('<form action="/product" method="POST"><input type="text" name="title"><input type="number" name="size"><button type="submit">submit</button></form>');
-   
-   
-});
+app.use(mainAdmin);
+app.use(mainSecond);
+ 
 
-app.use('/product',(req, res, next)=>{
-   console.log(req.body);
-   res.redirect('/');
-  });
-  app.use('/',(req, res, next)=>{
-   console.log('task done');
-   
-  });
+app.use((req,res,next)=>{
+res.status(404).send('<h1>Page not found</h1>')
+});
 app.listen(5500);
